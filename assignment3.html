@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combined Document Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        .document-container {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            background-color: #ffffff;
+            overflow: hidden;
+        }
+        h2 {
+            font-size: 1.5rem;
+            color: #333;
+            padding: 16px 24px;
+            margin: 0;
+            border-bottom: 1px solid #eee;
+        }
+        iframe {
+            width: 100%;
+            height: 700px;
+            border: none;
+            resize: vertical;
+            overflow: auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- Document 1: HTML Drawing with Feedback -->
+    <div class="document-container">
+        <h2>Document 1: HTML Drawing with Feedback</h2>
+        <iframe title="Document 1: HTML Drawing with Feedback"
+                srcdoc="<!DOCTYPE html>
+<html lang=&quot;en&quot;>
+<head>
+    <meta charset=&quot;UTF-8&quot;>
+    <meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;>
+    <title>HTML Drawing with Feedback</title>
+    <script src=&quot;https://cdn.tailwindcss.com&quot;></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1e40af',
+                        secondary: '#dbeafe',
+                    }
+                }
+            }
+        }
+    </script>
+    <style type=&quot;text/tailwindcss&quot;>
+        @layer utilities {
+            .drawing-container {
+                @apply flex flex-col items-center justify-center min-h-screen bg-secondary p-4;
+            }
+            .canvas-container {
+                @apply bg-white p-4 rounded-lg shadow-lg;
+            }
+            canvas {
+                @apply border border-gray-200 rounded;
+                opacity: 0;
+                animation: fadeIn 1.5s ease-in-out forwards;
+            }
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .highlight {
+                filter: drop-shadow(0 0 4px rgba(30, 64, 175, 0.8));
+                transition: filter 0.3s ease;
+            }
+            .tooltip {
+                position: absolute;
+                background-color: rgba(30, 64, 175, 0.9);
+                color: white;
+                padding: 5px 10px;
+                border-radius: 4px;
+                font-size: 12px;
+                pointer-events: none;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+                z-index: 10;
+            }
+        }
+    </style>
+</head>
+<body class=&quot;drawing-container&quot;>
+    <div class=&quot;canvas-container relative&quot;>
+        <canvas id=&quot;drawingCanvas&quot; width=&quot;500&quot; height=&quot;500&quot;></canvas>
+        <div id=&quot;tooltip&quot; class=&quot;tooltip&quot;></div>
+    </div>
+    <script>
+        const canvas = document.getElementById('drawingCanvas');
+        const ctx = canvas.getContext('2d');
+        const tooltip = document.getElementById('tooltip');
+        
+        const interactiveRegions = [
+            { name: 'Head', x: 200, y: 110, width: 100, height: 90, tooltip: 'Cube-shaped head' },
+            { name: 'Face', x: 210, y: 120, width: 80, height: 70, tooltip: 'Simple facial expression' },
+            { name: 'Body', x: 250, y: 200, width: 20, height: 80, tooltip: 'Body' },
+            { name: 'LeftArm', x: 225, y: 230, width: 30, height: 40, tooltip: 'Left arm holding paper' },
+            { name: 'RightArm', x: 265, y: 230, width: 40, height: 30, tooltip: 'Right arm holding pen' },
+            { name: 'Paper', x: 190, y: 225, width: 50, height: 45, tooltip: 'Paper with writing' },
+            { name: 'Pen', x: 305, y: 240, width: 60, height: 10, tooltip: 'Pen' },
+            { name: 'LeftLeg', x: 230, y: 280, width: 40, height: 100, tooltip: 'Left leg' },
+            { name: 'RightLeg', x: 270, y: 280, width: 40, height: 100, tooltip: 'Right leg' },
+            { name: 'LeftFoot', x: 210, y: 375, width: 40, height: 20, tooltip: 'Left foot' },
+            { name: 'RightFoot', x: 290, y: 375, width: 40, height: 20, tooltip: 'Right foot' },
+            { name: 'Seat', x: 100, y: 300, width: 300, height: 100, tooltip: 'Cube seat' }
+        ];
+
+        function isMouseInRegion(mouseX, mouseY, region) {
+            return mouseX >= region.x && mouseX <= region.x + region.width &&
+                   mouseY >= region.y && mouseY <= region.y + region.height;
+        }
+
+        canvas.addEventListener('mousemove', function(e) {
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+            let hoveredRegion = null;
+
+            for (const region of interactiveRegions) {
+                if (isMouseInRegion(mouseX, mouseY, region)) {
+                    hoveredRegion = region;
+                    break;
+                }
+            }
+
+            if (hoveredRegion) {
+                tooltip.textContent = hoveredRegion.tooltip;
+                tooltip.style.left = (e.clientX + 10) + 'px';
+                tooltip.style.top = (e.clientY + 10) + 'px';
+                tooltip.style.opacity = '1';
+                canvas.classList.add('highlight');
+            } else {
+                tooltip.style.opacity = '0';
+                canvas.classList.remove('highlight');
+            }
+        });
+
+        canvas.addEventListener('mouseleave', function() {
+            tooltip.style.opacity = '0';
+            canvas.classList.remove('highlight');
+        });
+
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#1e40af';
+        ctx.fillStyle = 'transparent';
+
+        function drawCube(x, y, width, height, depth) {
+            ctx.beginPath();
+            ctx.rect(x, y, width, height);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + depth, y - depth);
+            ctx.lineTo(x + width + depth, y - depth);
+            ctx.lineTo(x + width, y);
+            ctx.closePath();
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x + width, y);
+            ctx.lineTo(x + width + depth, y - depth);
+            ctx.lineTo(x + width + depth, y + height - depth);
+            ctx.lineTo(x + width, y + height);
+            ctx.closePath();
+            ctx.stroke();
+        }
+
+        function drawEllipse(x, y, width, height) {
+            ctx.beginPath();
+            ctx.ellipse(x, y, width, height, 0, 0, Math.PI * 2);
+            ctx.stroke();
+        }
+
+        function drawCurvedHand(x, y, angle) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(angle);
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.bezierCurveTo(-8, -4, -12, 6, 0, 10);
+            ctx.bezierCurveTo(12, 6, 8, -4, 0, 0);
+            ctx.closePath();
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        function drawLine(x1, y1, x2, y2) {
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+        }
+
+        function drawPen(x, y, angle, length) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(angle);
+            const bodyWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(0, -bodyWidth/2);
+            ctx.lineTo(length - 20, -bodyWidth/2);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(0, bodyWidth/2);
+            ctx.lineTo(length - 20, bodyWidth/2);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(length - 20, -bodyWidth/2);
+            ctx.lineTo(length, 0);
+            ctx.lineTo(length - 20, bodyWidth/2);
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        drawCube(100, 300, 300, 100, 50);
+        drawLine(250, 200, 270, 280);
+        drawLine(255, 215, 225, 270);
+        drawLine(255, 215, 305, 260);
+        drawCube(200, 110, 100, 90, 30);
+        drawLine(250, 200, 260, 210);
+        ctx.beginPath();
+        ctx.rect(210, 120, 80, 70);
+        ctx.stroke();
+        drawLine(225, 140, 245, 140);
+        drawLine(265, 140, 285, 140);
+        drawLine(225, 170, 285, 170);
+        ctx.beginPath();
+        ctx.moveTo(225, 270);
+        ctx.lineTo(200, 255);
+        ctx.lineTo(210, 225);
+        ctx.lineTo(240, 245);
+        ctx.closePath();
+        ctx.stroke();
+        drawLine(205, 235, 230, 250);
+        drawLine(210, 245, 235, 260);
+        const penAngle = Math.atan2(230 - 260, 200 - 305);
+        drawPen(305, 260, penAngle, 60);
+        drawLine(270, 280, 230, 310);
+        drawLine(230, 310, 230, 380);
+        drawLine(270, 280, 310, 310);
+        drawLine(310, 310, 310, 380);
+        drawCurvedHand(225, 270, Math.PI * 0.6);
+        drawCurvedHand(305, 260, Math.PI * -0.4);
+        ctx.beginPath();
+        ctx.moveTo(230, 380);
+        ctx.quadraticCurveTo(225, 395, 215, 385);
+        ctx.quadraticCurveTo(210, 375, 230, 380);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(310, 380);
+        ctx.quadraticCurveTo(305, 395, 295, 385);
+        ctx.quadraticCurveTo(290, 375, 310, 380);
+        ctx.stroke();
+    </script>
+</body>
+</html>">
+        </iframe>
+    </div>
+
+    <!-- Document 2: Cross Validation Accuracy -->
+    <div class="document-container">
+        <h2>Document 2: Cross Validation Accuracy</h2>
+        <iframe title="Document 2: Cross Validation Accuracy"
+                srcdoc="<!DOCTYPE html>
+<html lang=&quot;en&quot;>
+<head>
+    <meta charset=&quot;UTF-8&quot;>
+    <meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;>
+    <title>Cross Validation Accuracy</title>
+    <script src=&quot;https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js&quot;></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        .chart-container {
+            position: relative;
+            width: 80%;
+            max-width: 800px;
+            height: 60vh;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .chart-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class=&quot;chart-container&quot;>
+        <div class=&quot;chart-title&quot;>Cross Validation Accuracy (%)</div>
+        <canvas id=&quot;accuracyChart&quot;></canvas>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const modelData = {
+                models: ['BERT', 'RoBERTa', 'BART'],
+                accuracy: [74.4, 81.9, 73.1],
+                standardDeviation: [64.8, 65.5, 63.5]
+            };
+            const ctx = document.getElementById('accuracyChart').getContext('2d');
+            
+            const dataLabelPlugin = {
+                id: 'dataLabel',
+                afterDraw: function(chart) {
+                    const ctx = chart.ctx;
+                    ctx.save();
+                    ctx.font = 'bold 14px Arial';
+                    ctx.textAlign = 'center';
+                    
+                    chart.data.datasets.forEach((dataset, datasetIndex) => {
+                        const meta = chart.getDatasetMeta(datasetIndex);
+                        ctx.fillStyle = datasetIndex === 0 ? '#1f2937' : '#4b5563';
+                        
+                        meta.data.forEach((bar, index) => {
+                            const value = dataset.data[index];
+                            const x = bar.x;
+                            const y = chart.scales.y.getPixelForValue(value) - 10;
+                            ctx.fillText(value, x, y);
+                        });
+                    });
+                    ctx.restore();
+                }
+            };
+
+            const accuracyChart = new Chart(ctx, {
+                type: 'bar',
+                plugins: [dataLabelPlugin],
+                data: {
+                    labels: modelData.models,
+                    datasets: [
+                        {
+                            label: 'Cross Validation Accuracy (%)',
+                            data: modelData.accuracy,
+                            backgroundColor: '#f59e0b',
+                            borderColor: '#d97706',
+                            borderWidth: 1,
+                            borderRadius: 0,
+                            barPercentage: 0.4,
+                            categoryPercentage: 0.6
+                        },
+                        {
+                            label: 'Standard Deviation',
+                            data: modelData.standardDeviation,
+                            backgroundColor: '#d1d5db',
+                            borderColor: '#9ca3af',
+                            borderWidth: 1,
+                            borderRadius: 0,
+                            barPercentage: 0.4,
+                            categoryPercentage: 0.6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+                            titleFont: { size: 16, weight: 'bold' },
+                            bodyFont: { size: 14 },
+                            padding: 15,
+                            cornerRadius: 6,
+                            boxPadding: 5,
+                            usePointStyle: true,
+                            callbacks: {
+                                title: (context) => `Model: ${context[0].label}`,
+                                label: (context) => {
+                                    let label = context.dataset.label + ': ';
+                                    label += context.datasetIndex === 1 ? '±' : '';
+                                    label += context.parsed.y;
+                                    label += context.datasetIndex === 0 ? '%' : '';
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            grid: { display: false },
+                            ticks: { stepSize: 20, font: { family: 'Arial', size: 12 } }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: { family: 'Arial', size: 14, weight: 'bold' } }
+                        }
+                    },
+                    animation: {
+                        duration: 1500,
+                        easing: 'easeOutQuart',
+                        animations: {
+                            backgroundColor: { type: 'color', duration: 500, easing: 'easeInOutQuad' },
+                            borderColor: { type: 'color', duration: 500, easing: 'easeInOutQuad' },
+                            y: { type: 'number', duration: 1000, easing: 'easeOutQuart', from: (ctx) => ctx.chart.scales.y.max }
+                        }
+                    },
+                    interaction: { mode: 'nearest', axis: 'x', intersect: false },
+                    elements: {
+                        bar: {
+                            backgroundColor: (context) => {
+                                const hovered = context.chart.tooltip._active.some(active => active.dataIndex === context.dataIndex && active.datasetIndex === context.datasetIndex);
+                                return hovered ? (context.datasetIndex === 0 ? '#fbbf24' : '#e5e7eb') : (context.datasetIndex === 0 ? '#f59e0b' : '#d1d5db');
+                            },
+                            borderWidth: (context) => {
+                                const hovered = context.chart.tooltip._active.some(active => active.dataIndex === context.dataIndex && active.datasetIndex === context.datasetIndex);
+                                return hovered ? 2 : 1;
+                            }
+                        }
+                    }
+                }
+            });
+
+            document.getElementById('accuracyChart').addEventListener('mousemove', function(evt) {
+                const points = accuracyChart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true);
+                this.style.cursor = points.length ? 'pointer' : 'default';
+            });
+        });
+    </script>
+</body>
+</html>">
+        </iframe>
+    </div>
+
+    <!-- Document 3: Venn Diagram -->
+    <div class="document-container">
+        <h2>Document 3: Venn Diagram</h2>
+        <iframe title="Document 3: Venn Diagram"
+                srcdoc="<!DOCTYPE html>
+<html lang=&quot;en&quot;>
+<head>
+    <meta charset=&quot;UTF-8&quot;>
+    <meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;>
+    <title>维恩图交互演示</title>
+    <script src=&quot;https://cdn.tailwindcss.com&quot;></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#8a4fff',
+                        secondary: '#ffd166',
+                        tertiary: '#d4a373',
+                        dark: '#333333',
+                        light: '#f8f9fa'
+                    }
+                }
+            }
+        }
+    </script>
+    <style type=&quot;text/tailwindcss&quot;>
+        @layer utilities {
+            .venn-section {
+                cursor: pointer;
+                transition: all 0.3s ease;
+                opacity: 0;
+            }
+            .venn-section:hover {
+                filter: brightness(1.2);
+                transform: scale(1.03);
+            }
+            .pulse {
+                animation: pulse 2s infinite;
+            }
+            @keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.08); }
+                100% { transform: scale(1); }
+            }
+            .fade-in {
+                animation: fadeIn 0.5s ease-in-out;
+            }
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            .fly-in-left {
+                animation: flyInLeft 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            }
+            .fly-in-top {
+                animation: flyInTop 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            }
+            .fly-in-right {
+                animation: flyInRight 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            }
+            .fade-in-delayed {
+                animation: fadeIn 0.8s ease-out forwards;
+            }
+            @keyframes flyInLeft {
+                from { opacity: 0; transform: translate(-200px, 50px) scale(0.5); }
+                to { opacity: 1; transform: translate(0, 0) scale(1); }
+            }
+            @keyframes flyInTop {
+                from { opacity: 0; transform: translate(0, -200px) scale(0.5); }
+                to { opacity: 1; transform: translate(0, 0) scale(1); }
+            }
+            @keyframes flyInRight {
+                from { opacity: 0; transform: translate(200px, 50px) scale(0.5); }
+                to { opacity: 1; transform: translate(0, 0) scale(1); }
+            }
+            .delay-300 { animation-delay: 0.3s; }
+            .delay-600 { animation-delay: 0.6s; }
+            .delay-900 { animation-delay: 0.9s; }
+            .delay-1200 { animation-delay: 1.2s; }
+            .delay-1500 { animation-delay: 1.5s; }
+        }
+    </style>
+</head>
+<body class=&quot;bg-light min-h-screen flex flex-col items-center justify-center p-4&quot;>
+    <div class=&quot;bg-white rounded-xl shadow-lg p-8 fade-in w-full max-w-4xl&quot;>
+        <div class=&quot;relative w-full max-w-2xl aspect-square mx-auto&quot;>
+            <svg viewBox=&quot;0 0 500 400&quot; class=&quot;w-full h-full&quot;>
+                <defs>
+                    <linearGradient id=&quot;gradI&quot; x1=&quot;0%&quot; y1=&quot;0%&quot; x2=&quot;100%&quot; y2=&quot;100%&quot;>
+                        <stop offset=&quot;0%&quot; stop-color=&quot;#8a4fff&quot; stop-opacity=&quot;0.7&quot; />
+                        <stop offset=&quot;100%&quot; stop-color=&quot;#8a4fff&quot; stop-opacity=&quot;0.4&quot; />
+                    </linearGradient>
+                    <linearGradient id=&quot;gradII&quot; x1=&quot;0%&quot; y1=&quot;0%&quot; x2=&quot;100%&quot; y2=&quot;100%&quot;>
+                        <stop offset=&quot;0%&quot; stop-color=&quot;#d4a373&quot; stop-opacity=&quot;0.7&quot; />
+                        <stop offset=&quot;100%&quot; stop-color=&quot;#d4a373&quot; stop-opacity=&quot;0.4&quot; />
+                    </linearGradient>
+                    <linearGradient id=&quot;gradIII&quot; x1=&quot;0%&quot; y1=&quot;0%&quot; x2=&quot;100%&quot; y2=&quot;100%&quot;>
+                        <stop offset=&quot;0%&quot; stop-color=&quot;#ffd166&quot; stop-opacity=&quot;0.7&quot; />
+                        <stop offset=&quot;100%&quot; stop-color=&quot;#ffd166&quot; stop-opacity=&quot;0.4&quot; />
+                    </linearGradient>
+                </defs>
+                <circle cx=&quot;150&quot; cy=&quot;200&quot; r=&quot;130&quot; fill=&quot;url(#gradI)&quot; class=&quot;venn-section fly-in-left&quot; data-section=&quot;I&quot; />
+                <circle cx=&quot;300&quot; cy=&quot;150&quot; r=&quot;130&quot; fill=&quot;url(#gradII)&quot; class=&quot;venn-section fly-in-top delay-300&quot; data-section=&quot;II&quot; />
+                <circle cx=&quot;300&quot; cy=&quot;250&quot; r=&quot;130&quot; fill=&quot;url(#gradIII)&quot; class=&quot;venn-section fly-in-right delay-600&quot; data-section=&quot;III&quot; />
+                <text x=&quot;80&quot; y=&quot;200&quot; font-family=&quot;Arial&quot; font-size=&quot;28&quot; font-weight=&quot;bold&quot; text-anchor=&quot;middle&quot; fill=&quot;white&quot; class=&quot;venn-section fade-in-delayed delay-300&quot;>I</text>
+                <text x=&quot;300&quot; y=&quot;70&quot; font-family=&quot;Arial&quot; font-size=&quot;28&quot; font-weight=&quot;bold&quot; text-anchor=&quot;middle&quot; fill=&quot;white&quot; class=&quot;venn-section fade-in-delayed delay-600&quot;>II</text>
+                <text x=&quot;370&quot; y=&quot;290&quot; font-family=&quot;Arial&quot; font-size=&quot;28&quot; font-weight=&quot;bold&quot; text-anchor=&quot;middle&quot; fill=&quot;white&quot; class=&quot;venn-section fade-in-delayed delay-900&quot;>III</text>
+                <text x=&quot;210&quot; y=&quot;140&quot; font-family=&quot;Arial&quot; font-size=&quot;22&quot; font-weight=&quot;bold&quot; text-anchor=&quot;middle&quot; fill=&quot;white&quot; class=&quot;venn-section fade-in-delayed delay-1200&quot;>IV</text>
+                <text x=&quot;300&quot; y=&quot;170&quot; font-family=&quot;Arial&quot; font-size=&quot;22&quot; font-weight=&quot;bold&quot; text-anchor=&quot;middle&quot; fill=&quot;white&quot; class=&quot;venn-section fade-in-delayed delay-1200&quot;>V</text>
+                <text x=&quot;200&quot; y=&quot;260&quot; font-family=&quot;Arial&quot; font-size=&quot;22&quot; font-weight=&quot;bold&quot; text-anchor=&quot;middle&quot; fill=&quot;white&quot; class=&quot;venn-section fade-in-delayed delay-1200&quot;>VI</text>
+                <text x=&quot;240&quot; y=&quot;190&quot; font-family=&quot;Arial&quot; font-size=&quot;20&quot; font-weight=&quot;bold&quot; text-anchor=&quot;middle&quot; fill=&quot;white&quot; class=&quot;venn-section fade-in-delayed delay-1500&quot;>VII</text>
+            </svg>
+            <div class=&quot;absolute -top-10 left-1/2 transform -translate-x-1/2 text-xl font-bold text-tertiary&quot;>Replace</div>
+            <div class=&quot;absolute -left-16 top-1/2 transform -translate-y-1/2 text-xl font-bold text-primary&quot;>Delete</div>
+            <div class=&quot;absolute -right-20 top-1/2 transform -translate-y-1/2 text-xl font-bold text-secondary&quot;>Rewrite</div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const vennSections = document.querySelectorAll('.venn-section');
+            vennSections.forEach(section => {
+                section.addEventListener('mouseenter', function() {
+                    this.style.filter = 'brightness(1.3)';
+                    this.style.transform = 'scale(1.05)';
+                    if (this.getAttribute('data-section') !== &quot;III&quot;) {
+                        this.classList.add('pulse');
+                    }
+                });
+                section.addEventListener('mouseleave', function() {
+                    this.style.filter = 'brightness(1)';
+                    this.style.transform = 'scale(1)';
+                    this.classList.remove('pulse');
+                });
+            });
+        });
+    </script>
+</body>
+</html>">
+        </iframe>
+    </div>
+
+    <!-- Document 4: Data Visualization Charts -->
+    <div class="document-container">
+        <h2>Document 4: Data Visualization Charts</h2>
+        <iframe title="Document 4: Data Visualization Charts"
+                srcdoc="<!DOCTYPE html>
+<html lang=&quot;en&quot;>
+<head>
+    <meta charset=&quot;UTF-8&quot;>
+    <meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;>
+    <title>Data Visualization Charts</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .chart-container {
+            display: flex;
+            gap: 40px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .chart {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+        h3 {
+            color: #666;
+            margin-top: 0;
+            font-weight: normal;
+        }
+        canvas {
+            border: 1px solid #eee;
+            margin-top: 10px;
+        }
+        .tooltip {
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 100;
+        }
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+        }
+        button {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h2>Data Visualization</h2>
+        <h3>Probability Distribution &amp; Position-Related Curve</h3>
+    </div>
+    <div class=&quot;chart-container&quot;>
+        <div class=&quot;chart&quot;>
+            <h3>Probability Distribution</h3>
+            <canvas id=&quot;probabilityChart&quot; width=&quot;400&quot; height=&quot;300&quot;></canvas>
+            <div id=&quot;probabilityTooltip&quot; class=&quot;tooltip&quot;></div>
+        </div>
+        <div class=&quot;chart&quot;>
+            <h3>Position-Related Curve</h3>
+            <canvas id=&quot;positionChart&quot; width=&quot;400&quot; height=&quot;300&quot;></canvas>
+            <div id=&quot;positionTooltip&quot; class=&quot;tooltip&quot;></div>
+        </div>
+    </div>
+    <div class=&quot;controls&quot;>
+        <button id=&quot;resetBtn&quot;>Reset Animation</button>
+    </div>
+    <script>
+        const probCtx = document.getElementById('probabilityChart').getContext('2d');
+        const posCtx = document.getElementById('positionChart').getContext('2d');
+        const probTooltip = document.getElementById('probabilityTooltip');
+        const posTooltip = document.getElementById('positionTooltip');
+        let probAnimationProgress = 0;
+        let posAnimationProgress = 0;
+        let probAnimationId = null;
+        let posAnimationId = null;
+
+        const probData = {
+            p1: 0.2,
+            p2: 0.6,
+            regions: []
+        };
+
+        const posData = {
+            curvePoints: [],
+            dashedPoints: []
+        };
+
+        function init() {
+            startAnimations();
+            setupEventListeners();
+        }
+
+        function startAnimations() {
+            probAnimationProgress = 0;
+            posAnimationProgress = 0;
+            if (probAnimationId) cancelAnimationFrame(probAnimationId);
+            if (posAnimationId) cancelAnimationFrame(posAnimationId);
+            animateProbabilityChart();
+            animatePositionChart();
+        }
+
+        function animateProbabilityChart() {
+            probCtx.clearRect(0, 0, 400, 300);
+            drawAxes(probCtx, 400, 300);
+            const width = 400;
+            const height = 300;
+            const margin = 40;
+            const innerWidth = width - 2 * margin;
+            const innerHeight = height - 2 * margin;
+            
+            const p1Y = height - margin - innerHeight * probData.p1;
+            const p2Y = height - margin - innerHeight * probData.p2;
+            const i_n = margin + innerWidth * 0.2;
+            const iDn_n = margin + innerWidth * 0.4;
+            const x1 = margin + innerWidth * 0.8;
+
+            probCtx.beginPath();
+            probCtx.setLineDash([5, 3]);
+            probCtx.strokeStyle = '#666';
+            probCtx.moveTo(margin, p1Y);
+            probCtx.lineTo(width - margin, p1Y);
+            probCtx.moveTo(margin, p2Y);
+            probCtx.lineTo(width - margin, p2Y);
+            probCtx.stroke();
+            probCtx.setLineDash([]);
+
+            probCtx.fillStyle = '#333';
+            probCtx.font = '12px Arial';
+            probCtx.textAlign = 'right';
+            probCtx.fillText('(Low) p₁', margin - 5, p1Y + 4);
+            probCtx.fillText('(High) p₂', margin - 5, p2Y + 4);
+            
+            probCtx.textAlign = 'center';
+            probCtx.fillText('i/n', i_n, height - margin + 15);
+            probCtx.fillText('(i+Δn)/n', iDn_n, height - margin + 15);
+            probCtx.fillText('1', width - margin, height - margin + 15);
+
+            const leftRegionWidth = (iDn_n - i_n) * probAnimationProgress;
+            probCtx.fillStyle = 'rgba(150, 100, 200, 0.5)';
+            probCtx.fillRect(i_n, p2Y, leftRegionWidth, p1Y - p2Y);
+            probCtx.beginPath();
+            probCtx.setLineDash([5, 3]);
+            probCtx.strokeStyle = '#666';
+            probCtx.strokeRect(i_n, p2Y, leftRegionWidth, p1Y - p2Y);
+            probCtx.stroke();
+            probCtx.setLineDash([]);
+
+            probCtx.beginPath();
+            probCtx.setLineDash([5, 3]);
+            probCtx.strokeStyle = '#666';
+            probCtx.strokeRect(x1, p2Y, innerWidth * 0.15, p1Y - p2Y);
+            probCtx.stroke();
+            probCtx.setLineDash([]);
+
+            const bottomRegionWidth = (width - 2 * margin) * probAnimationProgress;
+            probCtx.fillStyle = 'rgba(150, 100, 200, 0.3)';
+            probCtx.fillRect(margin, p1Y, bottomRegionWidth, (height - margin) - p1Y);
+
+            const arrowProgress = Math.min(probAnimationProgress * 2, 1);
+            if (arrowProgress > 0) {
+                probCtx.beginPath();
+                probCtx.moveTo(iDn_n, (p1Y + p2Y) / 2);
+                probCtx.lineTo(iDn_n + (x1 - iDn_n) * arrowProgress, (p1Y + p2Y) / 2);
+                probCtx.strokeStyle = '#333';
+                probCtx.stroke();
+                
+                if (arrowProgress > 0.9) {
+                    probCtx.beginPath();
+                    probCtx.moveTo(x1, (p1Y + p2Y) / 2);
+                    probCtx.lineTo(x1 - 5, (p1Y + p2Y) / 2 - 5);
+                    probCtx.lineTo(x1 - 5, (p1Y + p2Y) / 2 + 5);
+                    probCtx.fillStyle = '#333';
+                    probCtx.fill();
+                }
+            }
+
+            probData.regions = [
+                {
+                    x: i_n, y: p2Y, width: iDn_n - i_n, height: p1Y - p2Y,
+                    label: 'High Probability Region', value: `p₂ - p₁ = ${(probData.p2 - probData.p1).toFixed(2)}`
+                },
+                {
+                    x: margin, y: p1Y, width: width - 2 * margin, height: (height - margin) - p1Y,
+                    label: 'Low Probability Region', value: `p₁ = ${probData.p1.toFixed(2)}`
+                }
+            ];
+
+            if (probAnimationProgress < 1) {
+                probAnimationProgress += 0.01;
+                probAnimationId = requestAnimationFrame(animateProbabilityChart);
+            }
+        }
+
+        function animatePositionChart() {
+            posCtx.clearRect(0, 0, 400, 300);
+            drawAxes(posCtx, 400, 300);
+            const width = 400;
+            const height = 300;
+            const margin = 40;
+            const innerWidth = width - 2 * margin;
+            const innerHeight = height - 2 * margin;
+            
+            if (posData.curvePoints.length === 0) {
+                generateCurvePoints();
+            }
+
+            posCtx.beginPath();
+            posCtx.strokeStyle = 'green';
+            posCtx.lineWidth = 2;
+            
+            const solidPointsToDraw = Math.floor(posData.curvePoints.length * posAnimationProgress);
+            for (let i = 0; i < solidPointsToDraw; i++) {
+                if (i === 0) {
+                    posCtx.moveTo(posData.curvePoints[i].x, posData.curvePoints[i].y);
+                } else {
+                    posCtx.lineTo(posData.curvePoints[i].x, posData.curvePoints[i].y);
+                }
+            }
+            posCtx.stroke();
+
+            posCtx.beginPath();
+            posCtx.setLineDash([5, 3]);
+            posCtx.strokeStyle = '#666';
+            
+            const dashedPointsToDraw = Math.floor(posData.dashedPoints.length * posAnimationProgress);
+            for (let i = 0; i < dashedPointsToDraw; i++) {
+                if (i === 0) {
+                    posCtx.moveTo(posData.dashedPoints[i].x, posData.dashedPoints[i].y);
+                } else {
+                    posCtx.lineTo(posData.dashedPoints[i].x, posData.dashedPoints[i].y);
+                }
+            }
+            posCtx.stroke();
+            posCtx.setLineDash([]);
+
+            posCtx.fillStyle = '#333';
+            posCtx.font = '12px Arial';
+            posCtx.textAlign = 'center';
+            posCtx.fillText('0', margin, height - margin + 15);
+            posCtx.fillText('0.5', margin + innerWidth * 0.5, height - margin + 15);
+            posCtx.fillText('1', width - margin, height - margin + 15);
+            posCtx.fillText('position', width / 2, height - 5);
+            
+            posCtx.textAlign = 'right';
+            posCtx.fillText('0', margin - 5, height - margin + 5);
+            posCtx.fillText('20', margin - 5, height - margin - innerHeight * 0.5 + 5);
+            posCtx.fillText('40', margin - 5, margin + 5);
+
+            if (posAnimationProgress < 1) {
+                posAnimationProgress += 0.01;
+                posAnimationId = requestAnimationFrame(animatePositionChart);
+            }
+        }
+
+        function generateCurvePoints() {
+            const width = 400;
+            const height = 300;
+            const margin = 40;
+            const innerWidth = width - 2 * margin;
+            const innerHeight = height - 2 * margin;
+            
+            posData.curvePoints = [];
+            posData.dashedPoints = [];
+            
+            const solidSegments = [
+                { x: 0.1, y: 36 },
+                { x: 0.4, y: 32 },
+                { x: 0.7, y: 28 },
+                { x: 0.9, y: 22 }
+            ];
+
+            const dashedSegments = [
+                { x: 0.1, y: 38 },
+                { x: 0.4, y: 34 },
+                { x: 0.7, y: 30 },
+                { x: 0.9, y: 24 }
+            ];
+
+            generatePointsFromSegments(solidSegments, posData.curvePoints, margin, innerWidth, innerHeight, height);
+            generatePointsFromSegments(dashedSegments, posData.dashedPoints, margin, innerWidth, innerHeight, height);
+        }
+
+        function generatePointsFromSegments(segments, pointArray, margin, innerWidth, innerHeight, chartHeight) {
+            const startPoint = segments[0];
+            const startX = margin + startPoint.x * innerWidth;
+            const startY = chartHeight - margin - (startPoint.y / 40) * innerHeight;
+            pointArray.push({
+                x: startX,
+                y: startY,
+                position: startPoint.x,
+                value: startPoint.y
+            });
+
+            for (let i = 0; i < segments.length - 1; i++) {
+                const start = segments[i];
+                const end = segments[i + 1];
+                const segmentLength = end.x - start.x;
+                const step = segmentLength / 20;
+                
+                for (let j = 1; j <= 20; j++) {
+                    const t = j / 20;
+                    const x = start.x + t * segmentLength;
+                    const y = start.y + t * (end.y - start.y);
+                    const pointX = margin + x * innerWidth;
+                    const pointY = chartHeight - margin - (y / 40) * innerHeight;
+                    pointArray.push({
+                        x: pointX,
+                        y: pointY,
+                        position: x,
+                        value: y
+                    });
+                }
+            }
+        }
+
+        function drawAxes(ctx, width, height) {
+            const margin = 40;
+            ctx.beginPath();
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 1;
+            
+            ctx.moveTo(margin, height - margin);
+            ctx.lineTo(width - margin, height - margin);
+            ctx.moveTo(margin, margin);
+            ctx.lineTo(margin, height - margin);
+            
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.moveTo(width - margin, height - margin);
+            ctx.lineTo(width - margin - 5, height - margin - 5);
+            ctx.lineTo(width - margin - 5, height - margin + 5);
+            ctx.fillStyle = '#333';
+            ctx.fill();
+            
+            ctx.beginPath();
+            ctx.moveTo(margin, margin);
+            ctx.lineTo(margin - 5, margin + 5);
+            ctx.lineTo(margin + 5, margin + 5);
+            ctx.fill();
+        }
+
+        function setupEventListeners() {
+            document.getElementById('resetBtn').addEventListener('click', startAnimations);
+            document.getElementById('probabilityChart').addEventListener('mousemove', handleProbabilityChartMouseMove);
+            document.getElementById('probabilityChart').addEventListener('mouseout', handleProbabilityChartMouseOut);
+            document.getElementById('positionChart').addEventListener('mousemove', handlePositionChartMouseMove);
+            document.getElementById('positionChart').addEventListener('mouseout', handlePositionChartMouseOut);
+        }
+
+        function handleProbabilityChartMouseMove(event) {
+            const rect = event.target.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            let hoveredRegion = null;
+            for (const region of probData.regions) {
+                if (x >= region.x && x <= region.x + region.width &&
+                    y >= region.y && y <= region.y + region.height) {
+                    hoveredRegion = region;
+                    break;
+                }
+            }
+            
+            if (hoveredRegion) {
+                probTooltip.style.opacity = '1';
+                probTooltip.innerHTML = `<strong>${hoveredRegion.label}</strong><br>${hoveredRegion.value}`;
+                probTooltip.style.left = `${event.pageX + 10}px`;
+                probTooltip.style.top = `${event.pageY + 10}px`;
+                probCtx.clearRect(0, 0, 400, 300);
+                drawAxes(probCtx, 400, 300);
+                animateProbabilityChart();
+                probCtx.fillStyle = 'rgba(150, 100, 200, 0.7)';
+                probCtx.fillRect(hoveredRegion.x, hoveredRegion.y, hoveredRegion.width, hoveredRegion.height);
+            } else {
+                probTooltip.style.opacity = '0';
+            }
+        }
+
+        function handleProbabilityChartMouseOut() {
+            probTooltip.style.opacity = '0';
+            animateProbabilityChart();
+        }
+
+        function handlePositionChartMouseMove(event) {
+            const rect = event.target.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            let closestPoint = null;
+            let minDistance = Infinity;
+            let pointType = '';
+            
+            for (const point of posData.curvePoints) {
+                const distance = Math.sqrt(Math.pow(x - point.x, 2) + Math.pow(y - point.y, 2));
+                if (distance < 15 && distance < minDistance) {
+                    minDistance = distance;
+                    closestPoint = point;
+                    pointType = 'Solid Line';
+                }
+            }
+            
+            if (!closestPoint) {
+                for (const point of posData.dashedPoints) {
+                    const distance = Math.sqrt(Math.pow(x - point.x, 2) + Math.pow(y - point.y, 2));
+                    if (distance < 15 && distance < minDistance) {
+                        minDistance = distance;
+                        closestPoint = point;
+                        pointType = 'Dashed Line';
+                    }
+                }
+            }
+            
+            if (closestPoint) {
+                posTooltip.style.opacity = '1';
+                posTooltip.innerHTML = `${pointType}<br>Position: ${closestPoint.position.toFixed(2)}<br>Value: ${closestPoint.value.toFixed(1)}`;
+                posTooltip.style.left = `${event.pageX + 10}px`;
+                posTooltip.style.top = `${event.pageY + 10}px`;
+                event.target.style.cursor = 'pointer';
+            } else {
+                posTooltip.style.opacity = '0';
+                event.target.style.cursor = 'default';
+            }
+        }
+
+        function handlePositionChartMouseOut() {
+            posTooltip.style.opacity = '0';
+            animatePositionChart();
+        }
+
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>">
+        </iframe>
+    </div>
+
+    <!-- Document 5: Animated Vector Diagram -->
+    <div class="document-container">
+        <h2>Document 5: Animated Vector Diagram</h2>
+        <iframe title="Document 5: Animated Vector Diagram"
+                srcdoc="<!DOCTYPE html>
+<html lang=&quot;zh&quot;>
+<head>
+    <meta charset=&quot;UTF-8&quot;>
+    <title>IDV Assignment 3 - Animated Vector Diagram (Final with Arrows)</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        @keyframes draw {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        .vector-line {
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            transition: all 0.2s ease-out;
+            cursor: default;
+            animation: draw 1s linear forwards;
+            stroke-dasharray: 1000;
+        }
+        .side {
+            stroke: #333333;
+        }
+        .side:hover {
+            stroke: #007bff;
+            stroke-width: 4;
+        }
+        .diagonal {
+            stroke: #00AAAA;
+            stroke-dasharray: 8 6;
+        }
+        .diagonal:hover {
+            stroke: #00cccc;
+            stroke-width: 4;
+        }
+        .grid-animated {
+            opacity: 0;
+            animation: fadeIn 1.5s ease-out forwards;
+        }
+        .vector-label {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            fill: black;
+            font-weight: bold;
+            opacity: 0;
+            animation: fadeIn 0.5s ease-out 3.0s forwards;
+        }
+        .sub {
+            font-size: 0.8em;
+        }
+        .sup {
+            font-size: 0.7em;
+        }
+    </style>
+</head>
+<body>
+<svg id=&quot;vector-svg&quot; width=&quot;400&quot; height=&quot;400&quot; viewBox=&quot;0 0 400 400&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;>
+    <defs>
+        <pattern id=&quot;grid&quot; width=&quot;50&quot; height=&quot;50&quot; patternUnits=&quot;userSpaceOnUse&quot;>
+            <path d=&quot;M 50 0 L 0 0 0 50&quot; fill=&quot;none&quot; stroke=&quot;#BBBBBB&quot; stroke-width=&quot;0.5&quot;/>
+        </pattern>
+        <marker id=&quot;arrowhead-diagonal&quot; 
+                viewBox=&quot;0 0 10 10&quot; 
+                refX=&quot;9&quot; refY=&quot;5&quot; 
+                markerUnits=&quot;strokeWidth&quot; 
+                markerWidth=&quot;6&quot; 
+                markerHeight=&quot;6&quot; 
+                orient=&quot;auto&quot;>
+            <path d=&quot;M 0 0 L 10 5 L 0 10 z&quot; fill=&quot;#00AAAA&quot; />
+        </marker>
+    </defs>
+    <rect id=&quot;grid-rect&quot; width=&quot;100%&quot; height=&quot;100%&quot; fill=&quot;url(#grid)&quot; class=&quot;grid-animated&quot; style=&quot;opacity: 0;&quot;/>
+    <g id=&quot;parallelogram-sides&quot;>
+        <line x1=&quot;50&quot; y1=&quot;250&quot; x2=&quot;200&quot; y2=&quot;250&quot; class=&quot;side vector-line&quot; style=&quot;stroke-dashoffset: 150; animation-delay: 0.0s;&quot;/>
+        <line x1=&quot;200&quot; y1=&quot;250&quot; x2=&quot;250&quot; y2=&quot;100&quot; class=&quot;side vector-line&quot; style=&quot;stroke-dashoffset: 158.1; animation-delay: 0.3s;&quot;/>
+        <line x1=&quot;250&quot; y1=&quot;100&quot; x2=&quot;100&quot; y2=&quot;100&quot; class=&quot;side vector-line&quot; style=&quot;stroke-dashoffset: 150; animation-delay: 0.6s;&quot;/>
+        <line x1=&quot;100&quot; y1=&quot;100&quot; x2=&quot;50&quot; y2=&quot;250&quot; class=&quot;side vector-line&quot; style=&quot;stroke-dashoffset: 158.1; animation-delay: 0.9s;&quot;/>
+    </g>
+    <g id=&quot;parallelogram-diagonals&quot;>
+        <line x1=&quot;50&quot; y1=&quot;250&quot; x2=&quot;250&quot; y2=&quot;100&quot; class=&quot;diagonal vector-line&quot; style=&quot;stroke-dashoffset: 250; animation-delay: 1.2s;&quot; marker-end=&quot;url(#arrowhead-diagonal)&quot; />
+        <line x1=&quot;200&quot; y1=&quot;250&quot; x2=&quot;100&quot; y2=&quot;100&quot; class=&quot;diagonal vector-line&quot; style=&quot;stroke-dashoffset: 212.1; animation-delay: 1.5s;&quot; marker-end=&quot;url(#arrowhead-diagonal)&quot; />
+    </g>
+    <g id=&quot;vector-labels&quot;>
+        <text x=&quot;50&quot; y=&quot;280&quot; class=&quot;vector-label&quot; text-anchor=&quot;end&quot;>
+            e<tspan class=&quot;sub&quot;>2</tspan><tspan class=&quot;sup&quot; dy=&quot;-0.7em&quot;>&beta;</tspan>
+        </text>
+        <text x=&quot;200&quot; y=&quot;280&quot; class=&quot;vector-label&quot; text-anchor=&quot;middle&quot;>
+            e<tspan class=&quot;sub&quot;>1</tspan><tspan class=&quot;sup&quot; dy=&quot;-0.7em&quot;>&beta;</tspan>
+        </text>
+        <text x=&quot;100&quot; y=&quot;75&quot; class=&quot;vector-label&quot; text-anchor=&quot;middle&quot;>
+            e<tspan class=&quot;sub&quot;>2</tspan><tspan class=&quot;sup&quot; dy=&quot;-0.7em&quot;>&alpha;</tspan>
+        </text>
+        <text x=&quot;250&quot; y=&quot;75&quot; class=&quot;vector-label&quot; text-anchor=&quot;start&quot;>
+            e<tspan class=&quot;sub&quot;>1</tspan><tspan class=&quot;sup&quot; dy=&quot;-0.7em&quot;>&alpha;</tspan>
+        </text>
+    </g>
+</svg>
+</body>
+</html>">
+        </iframe>
+    </div>
+</body>
+</html>

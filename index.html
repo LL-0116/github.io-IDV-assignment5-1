@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IVD Final Portfolio: Combined Assignments</title>
+    <style>
+        /* 1. 全局样式设置 */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+        }
+
+        /* 2. 侧边导航栏样式 */
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            padding-top: 20px;
+            overflow-y: auto;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.5rem;
+            border-bottom: 1px solid #34495e;
+            padding-bottom: 20px;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 15px 20px;
+            color: #ecf0f1;
+            text-decoration: none;
+            transition: background 0.3s;
+            border-left: 4px solid transparent;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: #34495e;
+            border-left-color: #3498db;
+        }
+
+        /* 3. 主内容区域 */
+        .main-content {
+            margin-left: 250px; /* 留出侧边栏宽度 */
+            padding: 40px;
+            width: calc(100% - 250px);
+        }
+
+        /* 4. 概览部分 (Requirement 4) */
+        .overview-card {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+            border-top: 5px solid #3498db;
+        }
+
+        /* 5. 作业容器样式 (Requirement 2: Consistent Layout) */
+        .assignment-section {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 50px;
+            overflow: hidden; /* 防止圆角溢出 */
+        }
+
+        .assignment-header {
+            background-color: #ecf0f1;
+            padding: 15px 25px;
+            border-bottom: 1px solid #bdc3c7;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .assignment-header h3 {
+            margin: 0;
+            color: #2c3e50;
+        }
+
+        .open-btn {
+            text-decoration: none;
+            font-size: 0.9em;
+            color: #2980b9;
+            border: 1px solid #2980b9;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+
+        /* 6. Iframe 样式 - 核心部分 */
+        iframe {
+            width: 100%;
+            border: none;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <h2>My Portfolio</h2>
+        <a href="#overview" class="nav-link">Overview</a>
+        <a href="#a1" class="nav-link">A1: PSI Readings</a>
+        <a href="#a2" class="nav-link">A2: SVG Effects</a>
+        <a href="#a3" class="nav-link">A3: Interactive Docs</a>
+        <a href="#a4" class="nav-link">A4: D3 Heatmap</a>
+    </nav>
+
+    <main class="main-content">
+
+        <section id="overview" class="overview-card">
+            <h1>Portfolio Overview</h1>
+            <p><strong>What the page contains:</strong> This portfolio integrates Assignments 1 through 4 into a single cohesive interface, showcasing skills in API handling, SVG manipulation, interactive layout design, and D3.js data visualization.</p>
+            
+            <p><strong>How I merged the assignments:</strong> I utilized an `iframe` based architecture. Each assignment is kept in its original file to preserve its specific CSS frameworks (like Tailwind in A3) and JavaScript variables, ensuring zero conflicts between assignments.</p>
+            
+            <p><strong>Difficulties faced:</strong> The main challenge was ensuring that the height of the embedded documents adjusted correctly so that inner scrollbars didn't conflict with the main page scrollbar.</p>
+            
+            <p><strong>Hardest assignment to integrate:</strong> Assignment 3 was the most challenging because it is itself a container of multiple documents. Embedding a viewer inside a viewer required careful layout adjustment to ensure the inner charts remained visible.</p>
+        </section>
+
+        <section id="a1" class="assignment-section">
+            <div class="assignment-header">
+                <h3>Assignment 1: PSI Readings</h3>
+                <a href="assignment1.html" target="_blank" class="open-btn">Open in New Tab</a>
+            </div>
+            <iframe src="assignment1.html" height="500px" title="Assignment 1"></iframe>
+        </section>
+
+        <section id="a2" class="assignment-section">
+            <div class="assignment-header">
+                <h3>Assignment 2: SVG Transformation</h3>
+                <a href="assignment2.html" target="_blank" class="open-btn">Open in New Tab</a>
+            </div>
+            <iframe src="assignment2.html" height="800px" title="Assignment 2"></iframe>
+        </section>
+
+        <section id="a3" class="assignment-section">
+            <div class="assignment-header">
+                <h3>Assignment 3: Combined Document Viewer</h3>
+                <a href="assignment3.html" target="_blank" class="open-btn">Open in New Tab</a>
+            </div>
+            <iframe src="assignment3.html" height="1000px" title="Assignment 3"></iframe>
+        </section>
+
+        <section id="a4" class="assignment-section">
+            <div class="assignment-header">
+                <h3>Assignment 4: D3.js Heatmap</h3>
+                <a href="assignment4.html" target="_blank" class="open-btn">Open in New Tab</a>
+            </div>
+            <iframe src="assignment4.html" height="900px" title="Assignment 4"></iframe>
+        </section>
+
+    </main>
+
+    <script>
+        //简单的脚本：滚动时高亮侧边栏链接
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= (sectionTop - sectionHeight / 3)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

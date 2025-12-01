@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>IDV Assignment 2</title>
+    <style>
+        /* 强制整个页面背景为纯白色 */
+        body {
+            background-color: white;
+            margin: 20px;
+            font-family: Arial;
+        }
+        /* 表格样式 */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto; /* 表格居中 */
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #f0f0f0;
+        }
+        /* 图片样式：统一大小，保持比例 */
+        .my-img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+        }
+        /* 5种效果的样式 */
+        .mirror { transform: scaleX(-1); } /* 左右镜像 */
+        .rotate { transform: rotate(180deg); } /* 旋转180度 */
+        .squeeze { transform: scaleY(0.5); } /* 垂直压缩50% */
+        .gray { filter: grayscale(100%); } /* 灰度 */
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">My SVG Effects</h1>
+
+    <table>
+        <!-- 表头：5种效果 -->
+        <tr>
+            <th>Original</th>
+            <th>Left-Right Mirrored</th>
+            <th>Rotated 180°</th>
+            <th>Vertically Squeezed (50%)</th>
+            <th>Grayscale</th>
+        </tr>
+
+        <!-- 第1张图 -->
+        <tr>
+            <td><img src="img1.svg" class="my-img" alt="Img 1"></td>
+            <td><img src="img1.svg" class="my-img mirror" alt="Img 1 mirrored"></td>
+            <td><img src="img1.svg" class="my-img rotate" alt="Img 1 rotated"></td>
+            <td><img src="img1.svg" class="my-img squeeze" alt="Img 1 squeezed"></td>
+            <td><img src="img1.svg" class="my-img gray" alt="Img 1 grayscale"></td>
+        </tr>
+
+        <!-- 第2张图 -->
+        <tr>
+            <td><img src="img2.svg" class="my-img" alt="Img 2"></td>
+            <td><img src="img2.svg" class="my-img mirror" alt="Img 2 mirrored"></td>
+            <td><img src="img2.svg" class="my-img rotate" alt="Img 2 rotated"></td>
+            <td><img src="img2.svg" class="my-img squeeze" alt="Img 2 squeezed"></td>
+            <td><img src="img2.svg" class="my-img gray" alt="Img 2 grayscale"></td>
+        </tr>
+
+        <!-- 第3张图 -->
+        <tr>
+            <td><img src="img3.svg" class="my-img" alt="Img 3"></td>
+            <td><img src="img3.svg" class="my-img mirror" alt="Img 3 mirrored"></td>
+            <td><img src="img3.svg" class="my-img rotate" alt="Img 3 rotated"></td>
+            <td><img src="img3.svg" class="my-img squeeze" alt="Img 3 squeezed"></td>
+            <td><img src="img3.svg" class="my-img gray" alt="Img 3 grayscale"></td>
+        </tr>
+
+        <!-- 第4张图 -->
+        <tr>
+            <td><img src="img4.svg" class="my-img" alt="Img 4"></td>
+            <td><img src="img4.svg" class="my-img mirror" alt="Img 4 mirrored"></td>
+            <td><img src="img4.svg" class="my-img rotate" alt="Img 4 rotated"></td>
+            <td><img src="img4.svg" class="my-img squeeze" alt="Img 4 squeezed"></td>
+            <td><img src="img4.svg" class="my-img gray" alt="Img 4 grayscale"></td>
+        </tr>
+
+        <!-- 第5张图 -->
+        <tr>
+            <td><img src="img5.svg" class="my-img" alt="Img 5"></td>
+            <td><img src="img5.svg" class="my-img mirror" alt="Img 5 mirrored"></td>
+            <td><img src="img5.svg" class="my-img rotate" alt="Img 5 rotated"></td>
+            <td><img src="img5.svg" class="my-img squeeze" alt="Img 5 squeezed"></td>
+            <td><img src="img5.svg" class="my-img gray" alt="Img 5 grayscale"></td>
+        </tr>
+
+        <!-- 第6张图 -->
+        <tr>
+            <td><img src="img6.svg" class="my-img" alt="Img 6"></td>
+            <td><img src="img6.svg" class="my-img mirror" alt="Img 6 mirrored"></td>
+            <td><img src="img6.svg" class="my-img rotate" alt="Img 6 rotated"></td>
+            <td><img src="img6.svg" class="my-img squeeze" alt="Img 6 squeezed"></td>
+            <td><img src="img6.svg" class="my-img gray" alt="Img 6 grayscale"></td>
+        </tr>
+
+        <!-- 第7张图 -->
+        <tr>
+            <td><img src="img7.svg" class="my-img" alt="Img 7"></td>
+            <td><img src="img7.svg" class="my-img mirror" alt="Img 7 mirrored"></td>
+            <td><img src="img7.svg" class="my-img rotate" alt="Img 7 rotated"></td>
+            <td><img src="img7.svg" class="my-img squeeze" alt="Img 7 squeezed"></td>
+            <td><img src="img7.svg" class="my-img gray" alt="Img 7 grayscale"></td>
+        </tr>
+
+        <!-- 第8张图 -->
+        <tr>
+            <td><img src="img8.svg" class="my-img" alt="Img 8"></td>
+            <td><img src="img8.svg" class="my-img mirror" alt="Img 8 mirrored"></td>
+            <td><img src="img8.svg" class="my-img rotate" alt="Img 8 rotated"></td>
+            <td><img src="img8.svg" class="my-img squeeze" alt="Img 8 squeezed"></td>
+            <td><img src="img8.svg" class="my-img gray" alt="Img 8 grayscale"></td>
+        </tr>
+
+        <!-- 第9张图 -->
+        <tr>
+            <td><img src="img9.svg" class="my-img" alt="Img 9"></td>
+            <td><img src="img9.svg" class="my-img mirror" alt="Img 9 mirrored"></td>
+            <td><img src="img9.svg" class="my-img rotate" alt="Img 9 rotated"></td>
+            <td><img src="img9.svg" class="my-img squeeze" alt="Img 9 squeezed"></td>
+            <td><img src="img9.svg" class="my-img gray" alt="Img 9 grayscale"></td>
+        </tr>
+
+        <!-- 第10张图 -->
+        <tr>
+            <td><img src="img10.svg" class="my-img" alt="Img 10"></td>
+            <td><img src="img10.svg" class="my-img mirror" alt="Img 10 mirrored"></td>
+            <td><img src="img10.svg" class="my-img rotate" alt="Img 10 rotated"></td>
+            <td><img src="img10.svg" class="my-img squeeze" alt="Img 10 squeezed"></td>
+            <td><img src="img10.svg" class="my-img gray" alt="Img 10 grayscale"></td>
+        </tr>
+    </table>
+</body>
+</html>
